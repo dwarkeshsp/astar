@@ -39,7 +39,7 @@ func New(config Config) (*astar, error) {
 // internal function
 func (a *astar) init() *astar {
 	// add invalidNodes directly to the closedList
-	a.closedList.Add(a.config.InvalidNodes...)
+	// a.closedList.Add(a.config.InvalidNodes...)
 	return a
 }
 
@@ -56,22 +56,23 @@ func (a *astar) H(nodeA Node, nodeB Node) int {
 func (a *astar) GetNeighborNodes(node Node) []Node {
 	var neighborNodes []Node
 
-	upNode := Node{X: node.X, Y: node.Y + 1, parent: &node}
+	newTime := node.time + 1
+	upNode := Node{X: node.X, Y: node.Y + 1, parent: &node, time: newTime}
 	if a.isAccessible(upNode) {
 		neighborNodes = append(neighborNodes, upNode)
 	}
 
-	downNode := Node{X: node.X, Y: node.Y - 1, parent: &node}
+	downNode := Node{X: node.X, Y: node.Y - 1, parent: &node, time: newTime}
 	if a.isAccessible(downNode) {
 		neighborNodes = append(neighborNodes, downNode)
 	}
 
-	leftNode := Node{X: node.X - 1, Y: node.Y, parent: &node}
+	leftNode := Node{X: node.X - 1, Y: node.Y, parent: &node, time: newTime}
 	if a.isAccessible(leftNode) {
 		neighborNodes = append(neighborNodes, leftNode)
 	}
 
-	rightNode := Node{X: node.X + 1, Y: node.Y, parent: &node}
+	rightNode := Node{X: node.X + 1, Y: node.Y, parent: &node, time: newTime}
 	if a.isAccessible(rightNode) {
 		neighborNodes = append(neighborNodes, rightNode)
 	}
@@ -94,6 +95,14 @@ func (a *astar) isAccessible(node Node) bool {
 		return false
 	}
 
+	for _, invalidNode := range a.config.InvalidNodes {
+		if invalidNode.X == node.X && invalidNode.Y == node.Y {
+			if invalidNode.time == 0 || invalidNode.time == node.time {
+				return false
+			}
+		}
+	}
+
 	return true
 }
 
@@ -108,7 +117,7 @@ func (a *astar) IsEndNode(checkNode, endNode Node) bool {
 //
 // If no path was found it returns nil and an error
 func (a *astar) FindPath(startNode, endNode Node) ([]Node, error) {
-
+	startNode.time = 0
 	a.startNode = startNode
 	a.endNode = endNode
 
@@ -149,7 +158,7 @@ func (a *astar) FindPath(startNode, endNode Node) ([]Node, error) {
 
 	}
 
-	return nil, errors.New("No path found")
+	return nil, errors.New("no path found")
 }
 
 // calculateNode calculates the F, G and H value for the given node

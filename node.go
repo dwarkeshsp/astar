@@ -14,6 +14,8 @@ type Node struct {
 	X, Y      int
 	Weighting int
 	parent    *Node
+	// Necessary for time dim.
+	time int
 }
 
 // String returns formatted values of the node

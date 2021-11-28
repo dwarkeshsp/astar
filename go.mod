@@ -1,3 +1,3 @@
-module github.com/jpierer/astar
+module github.com/dwarkeshsp/astar
 
 go 1.16
