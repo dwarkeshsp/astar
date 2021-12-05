@@ -53,6 +53,7 @@ func (a *astar) H(nodeA Node, nodeB Node) int {
 
 // GetNeighborNodes calculates the next neighbors of the given node
 // if a neighbor node is not accessible the node will be ignored
+// TODO: consider current node
 func (a *astar) GetNeighborNodes(node Node) []Node {
 	var neighborNodes []Node
 
