@@ -19,6 +19,7 @@ type Node struct {
 }
 
 // String returns formatted values of the node
+// Modified for convenience
 func (n Node) String() string {
 	return fmt.Sprintf("Node [X:%d Y:%d]", n.X, n.Y)
 }
